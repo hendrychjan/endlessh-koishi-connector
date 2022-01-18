@@ -16,7 +16,7 @@ def main(argv):
         'url': config["api_url"],
         'token': arguments["token"],
         'provider': arguments["provider"],
-        'collection': config["collection"],
+        'collection_id': config["collection_id"],
     }
 
     # Start the statistics messenger thread
