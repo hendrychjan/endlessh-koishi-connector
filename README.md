@@ -70,6 +70,7 @@ After=multi-user.target
 User=<user running endlessh>
 Type=simple
 Restart=always
+WorkingDirectory=<path to connector - example: /opt/endlessh/endlessh-koishi-connector>
 ExecStart=/usr/bin/python3 /<path to connector>/endlessh_connector.py -t <token> -p <provider>
 
 [Install]
