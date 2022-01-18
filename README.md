@@ -56,12 +56,11 @@ collection_id=61dedbebdb77a16b69ba5d4a
 ```
 
 ### Run connector as a systemd unit
-#### Using your own API
 Create a systemd service file:
 ```bash
-sudo nano /etc/systemd/system/test.service
+sudo nano /etc/systemd/system/endlessh-connector.service
 ```
-And paste the following: (dont forget to replace stuff inside <>
+And paste the following: (dont forget to replace stuff inside <>)
 ```bash
 [Unit]
 Description=Endlessh log connector
@@ -71,11 +70,63 @@ After=multi-user.target
 User=<user running endlessh>
 Type=simple
 Restart=always
-ExecStart=/usr/bin/python3 /<path to connector>/endlessh_connector.py -t <user token> -p <provider>
+ExecStart=/usr/bin/python3 /<path to connector>/endlessh_connector.py -t <token> -p <provider>
 
 [Install]
 WantedBy=multi-user.target
 ```
-__user token__ - if you are using Koishi, you need to supply the _x-auth-token_ to authenticate yourself
+__token__ - this will be set as a value of "x-auth-token" - if you use your own API and you do not perform any token authentication, just put in whatever, it wont be used (like "token" or something, just dont leave it empty)
 
-__provider__ - could be either "koishi" or "own"
+__provider__ - either "koishi" or "own"
+
+#### Additional config for Koishi
+To get your auth token for Koishi-api, use the following command:
+```bash
+curl --location --request POST 'https://koishi-api.herokuapp.com/auth' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email": "<your email>",
+    "password": "<your password>"
+}'
+```
+Also, note that the database structure should be exactly following:
+```JSON
+[
+    {
+        "columnName": "Date",
+        "dataType": "date"
+    },
+    {
+        "columnName": "Time",
+        "dataType": "time"
+    },
+    {
+        "columnName": "Duration",
+        "dataType": "number"
+    },
+    {
+        "columnName": "IP",
+        "dataType": "text"
+    }
+]
+```
+
+### Start and enable the service
+Reload systemd:
+```bash
+sudo systemctl daemon-reload
+```
+
+Control the systemd service:
+```bash
+# Start the service
+sudo systemctl start endlessh-connector
+
+# Enable the service (make it run automatically after the OS starts)
+sudo systemctl enable endlessh-connector
+
+# Check the status
+sudo systemctl status endlessh-connector
+```
+## Finish
+That should be it - statistics will submit every 3 hours.

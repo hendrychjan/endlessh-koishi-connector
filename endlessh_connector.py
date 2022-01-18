@@ -56,7 +56,6 @@ def start_journal_listener():
         for entry in j:
             if entry['MESSAGE'] != "":
                 if "CLOSE" in entry['MESSAGE']:
-                    print("INFO: session closed")
                     log = entry['MESSAGE']
                     # Get IP
                     host_index = log.find("ffff:")
@@ -68,6 +67,8 @@ def start_journal_listener():
                     time_not_parsed = log[time_index + 5:]
                     time = time_not_parsed[:time_not_parsed.find(".")]
                     
+                    print("INFO: session closed - (" + time + "s from " + host)
+
                     new_record = [
                         {
                             "column": "Date",
@@ -89,7 +90,7 @@ def start_journal_listener():
                     records.append(new_record)
 
 def api_service(args):
-    time.sleep(10)
+    time.sleep(10800)
     print("INFO: Sending statistics")
     api_url = args["api_url"]
     api_headers = {
