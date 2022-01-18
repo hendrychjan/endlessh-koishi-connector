@@ -13,7 +13,7 @@ def main(argv):
     arguments = parse_args(argv)
     config = load_config()
     service_args = {
-        'url': config["api_url"],
+        'api_url': config["api_url"],
         'token': arguments["token"],
         'provider': arguments["provider"],
         'collection_id': config["collection_id"],
